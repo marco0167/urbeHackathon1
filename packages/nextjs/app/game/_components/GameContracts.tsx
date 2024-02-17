@@ -1,66 +1,96 @@
 "use client";
 
-import { useEffect } from "react";
-import { useLocalStorage } from "usehooks-ts";
-import { BarsArrowUpIcon } from "@heroicons/react/20/solid";
-import { ContractUI } from "~~/app/debug/_components/contract";
-import { ContractName } from "~~/utils/scaffold-eth/contract";
-import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";
+import { use, useEffect, useState } from "react";
+import { InputBase, IntegerInput } from "~~/components/scaffold-eth";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
-const selectedContractStorageKey = "scaffoldEth2.selectedContract";
-const contractsData = getAllContracts();
-const contractNames = Object.keys(contractsData) as ContractName[];
 
 export function GameContracts() {
-  const [selectedContract, setSelectedContract] = useLocalStorage<ContractName>(
-    selectedContractStorageKey,
-    contractNames[0],
-    { initializeWithValue: false },
-  );
 
-  useEffect(() => {
-    if (!contractNames.includes(selectedContract)) {
-      setSelectedContract(contractNames[0]);
-    }
-  }, [selectedContract, setSelectedContract]);
+  // const { data: totalCounter } = useScaffoldContractRead({
+  //   contractName: "Game1",
+  //   functionName: "betAmount",
+  // });
+  const [value, setValue] = useState<string>("05");
+  const [isJoin, setIsJoin] = useState<boolean>(true);
+  const [isFound, setIsFound] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   console.log(value);
+  // }, [value]);
+
+  function handleChange(e) {
+    setValue(e.target.value);
+  }
+
+  function handleJoin() {
+    setIsJoin(false);
+  }
+
+  function handleCreate() {
+    setIsJoin(true);
+  }
+
+  function handleSearch() {
+    setIsFound(!isFound);
+  }
 
   return (
-    <div className="flex flex-col gap-y-6 lg:gap-y-8 py-8 lg:py-12 justify-center items-center">
-      {contractNames.length === 0 ? (
-        <p className="text-3xl mt-14">No contracts found!</p>
-      ) : (
-        <>
-          {contractNames.length > 1 && (
-            <div className="flex flex-row gap-2 w-full max-w-7xl pb-1 px-6 lg:px-10 flex-wrap">
-              {contractNames.map(contractName => (
-                <button
-                  className={`btn btn-secondary btn-sm font-light hover:border-transparent ${
-                    contractName === selectedContract
-                      ? "bg-base-300 hover:bg-base-300 no-animation"
-                      : "bg-base-100 hover:bg-secondary"
-                  }`}
-                  key={contractName}
-                  onClick={() => setSelectedContract(contractName)}
-                >
-                  {contractName}
-                  {contractsData[contractName].external && (
-                    <span className="tooltip tooltip-top tooltip-accent" data-tip="External contract">
-                      <BarsArrowUpIcon className="h-4 w-4 cursor-pointer" />
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          )}
-          {contractNames.map(contractName => (
-            <ContractUI
-              key={contractName}
-              contractName={contractName}
-              className={contractName === selectedContract ? "" : "hidden"}
+
+    <div>
+
+      {/* crate two button "join" and "create" side by side  */}
+
+      <div className="flex flex-col items-center">
+        <div className="flex gap-16 p-5 justify-center w-1/2 bg-red-700 ">
+          <button disabled={!isJoin} onClick={handleJoin} className="bg-blue-500 disabled:opacity-50 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"> Join </button>
+          <button disabled={isJoin} onClick={handleCreate} className="bg-blue-500 disabled:opacity-50 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"> Create </button>
+        </div>
+
+        <div className="flex w-1/2 gap-16">
+          <input
+            className="input input-ghost mb-4 focus-within:border-transparent bg-white focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 border w-full font-medium placeholder:text-accent/50 text-gray-400"
+            placeholder={"Search for a game"}
+            value={value?.toString()}
+            onChange={handleChange}
+            autoComplete="off"
+          />
+          <button onClick={handleSearch} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"> Search </button>
+        </div>
+
+        {isFound && (
+        <div className="w-1/2 bg-red-700 flex flex-col p-6 rounded-xl">
+          <input
+            className="input input-ghost mb-4 focus-within:border-transparent bg-white focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 border w-full font-medium placeholder:text-accent/50 text-gray-400"
+            placeholder={"Enter a number"}
+            value={value?.toString()}
+            onChange={handleChange}
+            autoComplete="off"
             />
-          ))}
-        </>
-      )}
+          <input
+            className="input input-ghost mb-4 focus-within:border-transparent bg-white focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 border w-full font-medium placeholder:text-accent/50 text-gray-400"
+            placeholder={"Enter a number"}
+            value={value?.toString()}
+            onChange={handleChange}
+            autoComplete="off"
+          />
+
+          <div className="flex gap-16">
+              <input
+                className="input input-ghost  focus-within:border-transparent bg-white focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 border w-full font-medium placeholder:text-accent/50 text-gray-400"
+                placeholder={"Enter a number"}
+                value={value?.toString()}
+                onChange={handleChange}
+                autoComplete="off"
+                />
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"> Bet </button>
+            </div>
+              <p>se vinci guadagnerai: {value}</p>
+
+        </div>
+        )}
+      </div>
     </div>
+
   );
 }

@@ -28,15 +28,14 @@ contract Game1 {
 		p.transfer(10000000000000000); //0.01 ether
 	}
 
-	function getBalance() public returns (uint) {
-		soldi = address(this).balance;
-		return address(this).balance;
-	}
+	// function getBalance() public returns (uint) {
+	// 	soldi = address(this).balance;
+	// 	return address(this).balance;
+	// }
 
     function newGame(bytes32 sessionId, uint num) public payable returns(int) {
 
-		// require(msg.value > betAmount);
-		getBalance();
+		require(msg.value  > betAmount, "Not enough money to play");
 		Player[] storage sessionPlayers = players[sessionId];
 
 		if(sessionPlayers.length < 2) // if less than 2 players are in the session add the player
@@ -54,7 +53,7 @@ contract Game1 {
 			{
 				sessionPlayers[0].win = -1;
 				sessionPlayers[1].win = 1;
-				// payPlayer(sessionPlayers[1].player); // pay player 2 //!VA SBLOCCATA
+				payPlayer(sessionPlayers[1].player); // pay player 2 //!VA SBLOCCATA
 				console.log(1);
 				delete players[sessionId]; // delete session
 				return (1);
