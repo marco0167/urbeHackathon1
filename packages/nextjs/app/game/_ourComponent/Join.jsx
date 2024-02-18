@@ -18,7 +18,10 @@ function Join({sessionId, sendBet, handleChange, handleSearch, callGetHook=false
       updateNum(5);
     }
     else
+    {
+      updateNum(num);
       setNum(num);
+    }
   }
 
   return (

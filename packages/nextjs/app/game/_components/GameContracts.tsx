@@ -130,9 +130,9 @@ export function GameContracts() {
           return;
         }
         setIsSubmitActive(true);
-        await delay(2000);
+        await delay(1000);
         setIsSubmitActive(false);
-        await delay(2000);
+        await delay(1000);
 
     }
     console.log("The game is ended", dataResult[1]);

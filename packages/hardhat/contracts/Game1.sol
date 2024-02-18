@@ -6,7 +6,7 @@ import "hardhat/console.sol";
 
 contract Game1 {
 
-	// address public immutable owner;
+	address public immutable owner;
 	uint public betAmount;
 	uint256 public soldi;
 
@@ -29,20 +29,17 @@ contract Game1 {
 
 	mapping (bytes32 => Session) public sessions; // object of sessionsId as key and sessions array as value
 
-	constructor() {
-		// owner = msg.sender;
+	constructor(address _owner) {
+		owner = _owner;
 		betAmount = 30000000000000000; //0.03 ether
 	}
 
-	function payPlayer(address player, uint price) private{
+	function payPlayer(address player, uint price, uint tax) private{
 		address payable p = payable(player);
+		address payable ownerPayable = payable(owner);
 		p.transfer(price);
+		ownerPayable.transfer(tax);
 	}
-
-	// function getBalance() public returns (uint) {
-	// 	soldi = address(this).balance;
-	// 	return address(this).balance;
-	// }
 
 	function findSession(bytes32 sessionId) public view returns (SessReturn memory) {
 		SessReturn memory sess = SessReturn(false, 0);
@@ -92,7 +89,7 @@ contract Game1 {
 			{
 				players[0].win = 2;
 				players[1].win = 1;
-				payPlayer(players[1].player, (tot - tax)); // pay player 2 //!VA SBLOCCATA
+				payPlayer(players[1].player, (tot - tax), tax); // pay player 2 //!VA SBLOCCATA
 				console.log(1);
 				// delete sessions[sessionId]; // delete session
 				return (1);
@@ -101,7 +98,7 @@ contract Game1 {
 			{
 				players[0].win = 1;
 				players[1].win = 2;
-				payPlayer(players[0].player, (tot - tax)); // pay palyer 1 //!VA SBLOCCATA
+				payPlayer(players[0].player, (tot - tax), tax); // pay palyer 1 //!VA SBLOCCATA
 				console.log(2);
 				// delete sessions[sessionId]; // delete session
 				return (-1);

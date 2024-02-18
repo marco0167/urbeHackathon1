@@ -22,11 +22,12 @@ const deployGame1: DeployFunction = async function (hre: HardhatRuntimeEnvironme
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
+  console.log("🚀 Deploying Game1 from ", deployer)
   await deploy("Game1", {
     from: deployer,
     // Contract constructor arguments
-    args: [],
-    // args: [deployer],
+    // args: [],
+    args: [deployer],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.

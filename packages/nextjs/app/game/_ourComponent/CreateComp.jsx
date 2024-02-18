@@ -31,7 +31,10 @@ function CreateComp({sessionId, sendBet, setSessionId, updateSessionId, updateNu
       updateNum(5);
     }
     else
+    {
+      updateNum(num);
       setNum(num);
+    }
   }
 
   return (
