@@ -31,12 +31,12 @@ contract Game1 {
 
 	constructor() {
 		// owner = msg.sender;
-		betAmount = 30000000000000000;
+		betAmount = 30000000000000000; //0.03 ether
 	}
 
-	function payPlayer(address player) private{
+	function payPlayer(address player, uint price) private{
 		address payable p = payable(player);
-		p.transfer(10000000000000000); //0.01 ether
+		p.transfer(price);
 	}
 
 	// function getBalance() public returns (uint) {
@@ -86,11 +86,13 @@ contract Game1 {
 
 		if(players.length == 2) // if 2 players are in the players
 		{
+			uint tot = sessions[sessionId].bet + msg.value;
+			uint tax = tot * 20 / 100;
 			if (players[0].num == players[1].num) //player 2 win
 			{
 				players[0].win = 2;
 				players[1].win = 1;
-				payPlayer(players[1].player); // pay player 2 //!VA SBLOCCATA
+				payPlayer(players[1].player, (tot - tax)); // pay player 2 //!VA SBLOCCATA
 				console.log(1);
 				// delete sessions[sessionId]; // delete session
 				return (1);
@@ -99,7 +101,7 @@ contract Game1 {
 			{
 				players[0].win = 1;
 				players[1].win = 2;
-				payPlayer(players[0].player); // pay palyer 1 //!VA SBLOCCATA
+				payPlayer(players[0].player, (tot - tax)); // pay palyer 1 //!VA SBLOCCATA
 				console.log(2);
 				// delete sessions[sessionId]; // delete session
 				return (-1);
