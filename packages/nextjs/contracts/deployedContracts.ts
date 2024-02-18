@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     Game1: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      address: "0x9A676e781A523b5d0C0e43731313A708CB607508",
       abi: [
         {
           inputs: [],
@@ -22,6 +22,85 @@ const deployedContracts = {
               internalType: "uint256",
               name: "",
               type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "sessionId",
+              type: "bytes32",
+            },
+          ],
+          name: "findSession",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "bool",
+                  name: "exists",
+                  type: "bool",
+                },
+                {
+                  internalType: "uint256",
+                  name: "bet",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct Game1.SessReturn",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "sessionId",
+              type: "bytes32",
+            },
+          ],
+          name: "getBetValue",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "sessionId",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "player",
+              type: "address",
+            },
+          ],
+          name: "getResult",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
             },
           ],
           stateMutability: "view",
@@ -58,28 +137,13 @@ const deployedContracts = {
               name: "",
               type: "bytes32",
             },
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
           ],
-          name: "players",
+          name: "sessions",
           outputs: [
             {
               internalType: "uint256",
-              name: "num",
+              name: "bet",
               type: "uint256",
-            },
-            {
-              internalType: "address",
-              name: "player",
-              type: "address",
-            },
-            {
-              internalType: "int256",
-              name: "win",
-              type: "int256",
             },
           ],
           stateMutability: "view",

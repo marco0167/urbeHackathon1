@@ -13,10 +13,22 @@ contract Game1 {
 	struct Player {
 		uint256  num;
 		address player;
-		int win;
+		bool end;
+		bool win;
 	}
 
-	mapping (bytes32 => Player[]) public players; // object of sessionsId as key and players array as value
+	struct Session {
+		uint bet;
+		Player[] players;
+	}
+
+	struct SessReturn {
+		bool exists;
+		uint bet;
+	}
+
+
+	mapping (bytes32 => Session) public sessions; // object of sessionsId as key and sessions array as value
 
 	constructor() {
 		// owner = msg.sender;
@@ -33,38 +45,67 @@ contract Game1 {
 	// 	return address(this).balance;
 	// }
 
+	function findSession(bytes32 sessionId) public view returns (SessReturn memory) {
+		SessReturn memory sess = SessReturn(false, 0);
+		if(sessions[sessionId].players.length != 0)
+		{
+			sess.exists = true;
+			sess.bet = sessions[sessionId].bet / 2;
+		}
+		return sess;
+	}
+
+	function getBetValue(bytes32 sessionId) public view returns (uint) {
+		return sessions[sessionId].bet;
+	}
+
+	function getResult(bytes32 sessionId, address player) public view returns (bool, bool) {
+		Player[] storage players = sessions[sessionId].players;
+		for (uint i = 0; i < players.length; i++)
+		{
+			if (players[i].player == player)
+				return (players[i].end ,players[i].win);
+		}
+		return (false, false);
+	}
+
     function newGame(bytes32 sessionId, uint num) public payable returns(int) {
 
 		require(msg.value  > betAmount, "Not enough money to play");
-		Player[] storage sessionPlayers = players[sessionId];
+		Player[] storage players = sessions[sessionId].players;
 
-		if(sessionPlayers.length < 2) // if less than 2 players are in the session add the player
+		if(players.length < 2) // if less than 2 players are in the players add the player
 		{
-			sessionPlayers.push(Player({ // add player
+			if (players.length == 0)
+				sessions[sessionId].bet = msg.value;
+			players.push(Player({ // add player
 				player: msg.sender,
 				num: num,
-				win: 0
+				win: false,
+				end: false
 			}));
 		}
 
-		if(sessionPlayers.length == 2) // if 2 players are in the session
+		if(players.length == 2) // if 2 players are in the players
 		{
-			if (sessionPlayers[0].num == sessionPlayers[1].num) //player 2 win
+			players[0].end = true;
+			players[1].end = true;
+			if (players[0].num == players[1].num) //player 2 win
 			{
-				sessionPlayers[0].win = -1;
-				sessionPlayers[1].win = 1;
-				payPlayer(sessionPlayers[1].player); // pay player 2 //!VA SBLOCCATA
+				players[0].win = false;
+				players[1].win = true;
+				payPlayer(players[1].player); // pay player 2 //!VA SBLOCCATA
 				console.log(1);
-				delete players[sessionId]; // delete session
+				// delete sessions[sessionId]; // delete session
 				return (1);
 			}
-			else if (sessionPlayers[0].num != sessionPlayers[1].num) // player 1 win
+			else if (players[0].num != players[1].num) // player 1 win
 			{
-				sessionPlayers[0].win = 1;
-				sessionPlayers[1].win = -1;
-				// payPlayer(sessionPlayers[0].player); // pay palyer 1 //!VA SBLOCCATA
+				players[0].win = true;
+				players[1].win = false;
+				payPlayer(players[0].player); // pay palyer 1 //!VA SBLOCCATA
 				console.log(2);
-				delete players[sessionId]; // delete session
+				// delete sessions[sessionId]; // delete session
 				return (-1);
 			}
 		}
