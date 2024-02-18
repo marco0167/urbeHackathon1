@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 
 function CreateComp({sessionId, sendBet, setSessionId, updateSessionId, updateNum, updateCoin}) {
   const [num, setNum] = useState(1);
+  const [bet, setBet] = useState(0);
 
   function makeid(length) {
     let result = '';
@@ -64,11 +65,12 @@ function CreateComp({sessionId, sendBet, setSessionId, updateSessionId, updateNu
                 className="input input-ghost  focus-within:border-transparent bg-white focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 border w-4/5 font-medium placeholder:text-accent/50 text-gray-400"
                 name="payable"
                 placeholder="Insert the bet amount in ETH"
-                onChange={(e) => updateCoin(e.target.value)}
+                onChange={(e) => {updateCoin(e.target.value), setBet(e.target.value)}}
                 />
               <button onClick={sendBet} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"> Bet </button>
             </div>
-              {/* <p>se vinci guadagnerai: !!!METTI VALUE!!</p> */}
+            <p>Potential winnig: {(+bet + (+bet / 2)) - ((+bet + (+bet / 2)) * 20 / 100) } ETH</p>
+
 
         </div>
       </div>

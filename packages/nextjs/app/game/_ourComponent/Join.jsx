@@ -61,11 +61,11 @@ function Join({sessionId, sendBet, handleChange, handleSearch, callGetHook=false
                 name="payable"
                 value={formatEther(isFound?.bet)}
                 disabled
-                onChange={(e) => updateCoin(e.target.value)}
+                onChange={(e) => {updateCoin(e.target.value), setBet(e.target.value)}}
                 />
               <button onClick={sendBet} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"> Bet </button>
             </div>
-              {/* <p>se vinci guadagnerai: !!!METTI VALUE!!</p> */}
+              <p>Potential winnig: {(+formatEther(isFound?.bet) * 2 + +formatEther(isFound?.bet)) - ((+formatEther(isFound?.bet) * 2 + +formatEther(isFound?.bet)) * 20 / 100)} ETH</p>
 
         </div>
         )}
