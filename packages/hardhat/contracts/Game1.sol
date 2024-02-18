@@ -13,8 +13,7 @@ contract Game1 {
 	struct Player {
 		uint256  num;
 		address player;
-		bool end;
-		bool win;
+		int win;
 	}
 
 	struct Session {
@@ -59,14 +58,14 @@ contract Game1 {
 		return sessions[sessionId].bet;
 	}
 
-	function getResult(bytes32 sessionId, address player) public view returns (bool, bool) {
+	function getResult(bytes32 sessionId, address player) public view returns (int) {
 		Player[] storage players = sessions[sessionId].players;
 		for (uint i = 0; i < players.length; i++)
 		{
 			if (players[i].player == player)
-				return (players[i].end ,players[i].win);
+				return players[i].win;
 		}
-		return (false, false);
+		return 0;
 	}
 
     function newGame(bytes32 sessionId, uint num) public payable returns(int) {
@@ -81,19 +80,16 @@ contract Game1 {
 			players.push(Player({ // add player
 				player: msg.sender,
 				num: num,
-				win: false,
-				end: false
+				win: 0
 			}));
 		}
 
 		if(players.length == 2) // if 2 players are in the players
 		{
-			players[0].end = true;
-			players[1].end = true;
 			if (players[0].num == players[1].num) //player 2 win
 			{
-				players[0].win = false;
-				players[1].win = true;
+				players[0].win = 2;
+				players[1].win = 1;
 				payPlayer(players[1].player); // pay player 2 //!VA SBLOCCATA
 				console.log(1);
 				// delete sessions[sessionId]; // delete session
@@ -101,8 +97,8 @@ contract Game1 {
 			}
 			else if (players[0].num != players[1].num) // player 1 win
 			{
-				players[0].win = true;
-				players[1].win = false;
+				players[0].win = 1;
+				players[1].win = 2;
 				payPlayer(players[0].player); // pay palyer 1 //!VA SBLOCCATA
 				console.log(2);
 				// delete sessions[sessionId]; // delete session

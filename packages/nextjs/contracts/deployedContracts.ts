@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     Game1: {
-      address: "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      address: "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f",
       abi: [
         {
           inputs: [],
@@ -93,14 +93,9 @@ const deployedContracts = {
           name: "getResult",
           outputs: [
             {
-              internalType: "bool",
+              internalType: "int256",
               name: "",
-              type: "bool",
-            },
-            {
-              internalType: "bool",
-              name: "",
-              type: "bool",
+              type: "int256",
             },
           ],
           stateMutability: "view",
