@@ -1,8 +1,26 @@
-import React from 'react'
+/* eslint-disable prettier/prettier */
+import React, { useState } from 'react'
 import { GetFindSession } from '../_components/GetFindSession'
 import { formatEther } from 'viem'
 
 function Join({sessionId, sendBet, handleChange, handleSearch, callGetHook=false, bytes32String, setIsFound, isFound, correctSessionId, updateNum, updateCoin}) {
+  const [num, setNum] = useState(1);
+
+  const checkNum = (num) => {
+    if (num < 0)
+    {
+      setNum(0);
+      updateNum(0);
+    }
+    else if (num > 5)
+    {
+      setNum(5);
+      updateNum(5);
+    }
+    else
+      setNum(num);
+  }
+
   return (
 	<>
 		<div className="flex bg-[#323f61] p-6 rounded-xl items-center w-2/3 justify-between">
@@ -29,10 +47,11 @@ function Join({sessionId, sendBet, handleChange, handleSearch, callGetHook=false
             />
           <input
             className="input input-ghost mb-4 focus-within:border-transparent bg-white focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 border w-4/5 font-medium placeholder:text-accent/50 text-gray-400"
-            placeholder="Insert your game number"
+            placeholder="Insert your game number between 0 and 5"
             type="number"
             name="num"
-            onChange={(e) => updateNum(e.target.value)}
+            value={num}
+            onChange={(e) => checkNum(e.target.value)}
             autoComplete="off"
           />
 
